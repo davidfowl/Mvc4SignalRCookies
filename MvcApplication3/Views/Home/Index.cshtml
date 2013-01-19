@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+Cookie value from page load (controller) -> <div id="cookie-load">@Request.Cookies["x"].Value</div>
+Cookie value from client -> <div id="cookie-client"></div>
+Cookie value from hub -> <div id="cookie-hub"></div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.signalR-1.0.0-rc2.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+
+            $('#cookie-client').html($.cookie("x"))
+
+            $.connection.hub.start().done(function () {
+                $.connection.myHub.server.getCookie().done(function (val) {
+                    $('#cookie-hub').html(val);
+                });
+            });
+        });
+    </script>
+}
